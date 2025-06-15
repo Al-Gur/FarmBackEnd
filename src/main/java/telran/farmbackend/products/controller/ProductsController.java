@@ -12,10 +12,22 @@ public class ProductsController {
     final ProductsService productsService;
 
     @GetMapping("showall")
-    public Iterable<ProductDto> showAll(){ return productsService.getAllProducts(); }
+    public Iterable<ProductDto> showAll() {
+        return productsService.getAllProducts();
+    }
 
-    @PostMapping("addproduct")
+    @PostMapping("product")
     public ProductDto addProduct(@RequestBody ProductDto productDto) {
         return productsService.addProduct(productDto);
+    }
+
+    @PutMapping("product")
+    public ProductDto updateProduct(@RequestBody ProductDto productDto) {
+        return productsService.updateProduct(productDto);
+    }
+
+    @DeleteMapping("product/{productId}")
+    public ProductDto deleteProduct(@PathVariable String productId) {
+        return productsService.deleteProduct(productId);
     }
 }

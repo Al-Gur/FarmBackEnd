@@ -1,5 +1,6 @@
 package telran.farmbackend.products.model;
 
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,6 +10,7 @@ import telran.farmbackend.products.dto.ProductDto;
 
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(of = "id")
 @Document(collection = "products")
 public class Product {
@@ -18,9 +20,9 @@ public class Product {
     Integer quantity;
     String producer;
 
-    public Product(ProductDto productDto) {
-        name = productDto.getName();
-        quantity=productDto.getQuantity();
-        producer=productDto.getProducer();
+    public Product(String name, Integer quantity, String producer) {
+        this.name = name;
+        this.quantity = quantity;
+        this.producer = producer;
     }
 }
