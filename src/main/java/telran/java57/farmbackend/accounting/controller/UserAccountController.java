@@ -49,7 +49,7 @@ public class UserAccountController {
 
     @PutMapping("user/{login}/role/{role}")
     public RolesDto addRole(@PathVariable String login, @PathVariable String role){
-        return userService.changeRolesList(login,role,true);
+        return  userService.changeRolesList(login,role,true);
     }
 
     @DeleteMapping("user/{login}/role/{role}")
