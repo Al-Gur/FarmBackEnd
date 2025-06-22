@@ -20,23 +20,28 @@ public class ProductsServiceImpl implements ProductsService {
     }
 
     @Override
-    public ProductDto addProduct(ProductDto productDto) {
+    public ProductDto addProduct(String username, ProductDto productDto) {
+        if (!productDto.getProducer().equals(username)) {
+            throw new SecurityException();
+        }
         Product product = new Product(productDto.getName(), productDto.getQuantity(), productDto.getProducer());
         return new ProductDto(productsRepository.save(product));
     }
 
     @Override
-    public ProductDto updateProduct(ProductDto productDto) {
+    public ProductDto updateProduct(String username, ProductDto productDto) {
         Product productOld = productsRepository.findById(productDto.getId())
                 .orElseThrow(RuntimeException::new);
         Product productNew = new Product(productDto.getId(), productDto.getName(), productDto.getQuantity(),
                 productDto.getProducer());
-        productsRepository.save(productNew);
+        if (!(productDto.getProducer().equals(username)) && productOld.getProducer().equals(username)) {
+            throw new SecurityException();
+        }          productsRepository.save(productNew);
         return new ProductDto(productOld);
     }
 
     @Override
-    public ProductDto deleteProduct(String productId) {
+    public ProductDto deleteProduct(String username, String productId) {
         Product product = productsRepository.findById(productId)
                         .orElseThrow(RuntimeException::new);
         productsRepository.deleteById(productId);

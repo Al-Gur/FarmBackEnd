@@ -13,6 +13,7 @@ import java.security.Principal;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("user")
 public class UserAccountController {
     final UserAccountService userService;
 
@@ -32,31 +33,28 @@ public class UserAccountController {
         userService.changePassword(principal.getName(), newPassword);
     }
 
-    @GetMapping("user/{login}")
+    @PutMapping("update")
+    public UserDto updateUser(Principal principal, @RequestBody UpdateUserDto updateUserDto){
+        return userService.updateUser(principal.getName(), updateUserDto);
+    }
+
+    @GetMapping("info/{login}")
     public UserDto getUser(@PathVariable String login){
         return userService.getUser(login);
     }
 
-    @DeleteMapping("user/{login}")
+    @DeleteMapping("delete/{login}")
     public UserDto removeUser(@PathVariable String login){
         return userService.removeUser(login);
     }
 
-    @PutMapping("user/{login}")
-    public UserDto updateUser(@PathVariable String login, @RequestBody UpdateUserDto updateUserDto){
-        return userService.updateUser(login,updateUserDto);
-    }
-
-    @PutMapping("user/{login}/role/{role}")
+    @PutMapping("addrole/{login}/{role}")
     public RolesDto addRole(@PathVariable String login, @PathVariable String role){
         return  userService.changeRolesList(login,role,true);
     }
 
-    @DeleteMapping("user/{login}/role/{role}")
+    @DeleteMapping("removerole/{login}/{role}")
     public RolesDto removeRole(@PathVariable String login, @PathVariable String role){
         return userService.changeRolesList(login,role,false);
     }
-
-
-
 }

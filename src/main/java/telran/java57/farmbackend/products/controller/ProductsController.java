@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.*;
 import telran.java57.farmbackend.products.dto.ProductDto;
 import telran.java57.farmbackend.products.service.ProductsService;
 
+import java.security.Principal;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("products")
@@ -17,17 +19,17 @@ public class ProductsController {
     }
 
     @PostMapping("product")
-    public ProductDto addProduct(@RequestBody ProductDto productDto) {
-        return productsService.addProduct(productDto);
+    public ProductDto addProduct(Principal principal, @RequestBody ProductDto productDto) {
+        return productsService.addProduct(principal.getName(), productDto);
     }
 
     @PutMapping("product")
-    public ProductDto updateProduct(@RequestBody ProductDto productDto) {
-        return productsService.updateProduct(productDto);
+    public ProductDto updateProduct(Principal principal, @RequestBody ProductDto productDto) {
+        return productsService.updateProduct(principal.getName(), productDto);
     }
 
     @DeleteMapping("product/{productId}")
-    public ProductDto deleteProduct(@PathVariable String productId) {
-        return productsService.deleteProduct(productId);
+    public ProductDto deleteProduct(Principal principal, @PathVariable String productId) {
+        return productsService.deleteProduct(principal.getName(), productId);
     }
 }

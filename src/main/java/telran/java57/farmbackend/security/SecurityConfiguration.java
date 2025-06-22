@@ -20,35 +20,30 @@ public class SecurityConfiguration {
         httpSecurity.httpBasic(Customizer.withDefaults());
         httpSecurity.csrf(AbstractHttpConfigurer::disable);
         httpSecurity.authorizeHttpRequests(authorize -> authorize
-                .requestMatchers().authenticated()
+                .requestMatchers("/user/register").permitAll()
 
-                .requestMatchers("/account/register").permitAll()
+                .requestMatchers("/user/info/{login}")
+                .access(new WebExpressionAuthorizationManager("hasRole('ADMINISTRATOR') " +
+                        "or authentication.name == #login"))
 
-                .requestMatchers(HttpMethod.DELETE, "/account/user/{login}")
+                .requestMatchers(HttpMethod.DELETE, "/user/delete/{login}")
                 .access(new WebExpressionAuthorizationManager("hasRole('ADMINISTRATOR') " +
                         "or authentication.name == #login"))
 
                 .requestMatchers(HttpMethod.PUT, "/account/user/{login}")
                 .access(new WebExpressionAuthorizationManager("authentication.name == #login"))
 
-                .requestMatchers("/account/user/{login}/role/{role}")
-                .access(new WebExpressionAuthorizationManager("hasRole('ADMINISTRATOR')"))
+                .requestMatchers("addrole/{login}/{role}")
+                .access(new WebExpressionAuthorizationManager("hasRole('ADMINISTRATOR') " +
+                        "or authentication.name == #login"))
 
-                .requestMatchers(HttpMethod.POST, "/forum/post/{author}")
-                .access(new WebExpressionAuthorizationManager("authentication.name == #author"))
+                .requestMatchers("removerole/{login}/{role}")
+                .access(new WebExpressionAuthorizationManager("hasRole('ADMINISTRATOR') " +
+                        "or authentication.name == #login"))
 
-                //.requestMatchers(HttpMethod.DELETE, "/forum/post/{id}")
-                //    .access(new WebExpressionAuthorizationManager("hasRole('MODERATOR') " +
-                //        "or authentication.name == #login"))
+                .requestMatchers("products/showall").permitAll()
 
-
-                .requestMatchers(HttpMethod.PUT, "/forum/post/{id}/comment/{author}")
-                .access(new WebExpressionAuthorizationManager("authentication.name == #author"))
-
-
-
-                .requestMatchers(HttpMethod.DELETE, "products/product/{productId}").authenticated()
-                .anyRequest().permitAll()
+                .anyRequest().authenticated()
         );
         return httpSecurity.build();
     }
