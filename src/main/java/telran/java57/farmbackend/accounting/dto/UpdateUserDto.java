@@ -3,9 +3,7 @@ package telran.java57.farmbackend.accounting.dto;
 import lombok.Getter;
 
 @Getter
-public class UserRegisterDto {
-    String login;
-    String password;
+public class UpdateUserDto {
     String firstName;
     String lastName;
 }
