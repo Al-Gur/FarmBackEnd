@@ -11,7 +11,7 @@ import telran.java57.farmbackend.accounting.dto.UserDto;
 import telran.java57.farmbackend.accounting.dto.UserRegisterDto;
 import telran.java57.farmbackend.accounting.dto.exceptions.UserExistsException;
 import telran.java57.farmbackend.accounting.dto.exceptions.UserNotFoundException;
-import telran.java57.farmbackend.accounting.model.User;
+import telran.java57.farmbackend.accounting.model.UserAccount;
 
 
 @Service
@@ -25,7 +25,7 @@ public class UserAccountServiceImpl implements UserAccountService, CommandLineRu
         if (userAccountRepository.existsById(userRegisterDto.getLogin())) {
             throw new UserExistsException();
         }
-        User user = new User(userRegisterDto.getLogin(), userRegisterDto.getPassword(),
+        UserAccount user = new UserAccount(userRegisterDto.getLogin(), userRegisterDto.getPassword(),
                 userRegisterDto.getFirstName(), userRegisterDto.getLastName());
         String password = passwordEncoder.encode(userRegisterDto.getPassword());
         user.setPassword(password);
@@ -35,20 +35,20 @@ public class UserAccountServiceImpl implements UserAccountService, CommandLineRu
 
     @Override
     public UserDto getUser(String login) {
-        User user = userAccountRepository.findById(login).orElseThrow(UserNotFoundException::new);
+        UserAccount user = userAccountRepository.findById(login).orElseThrow(UserNotFoundException::new);
         return new UserDto(user);
     }
 
     @Override
     public UserDto removeUser(String login) {
-        User user = userAccountRepository.findById(login).orElseThrow(UserNotFoundException::new);
+        UserAccount user = userAccountRepository.findById(login).orElseThrow(UserNotFoundException::new);
         userAccountRepository.delete(user);
         return new UserDto(user);
     }
 
     @Override
     public UserDto updateUser(String login, UpdateUserDto updateUserDto) {
-        User user = userAccountRepository.findById(login).orElseThrow(UserNotFoundException::new);
+        UserAccount user = userAccountRepository.findById(login).orElseThrow(UserNotFoundException::new);
         if (updateUserDto.getFirstName() != null) {
             user.setFirstName(updateUserDto.getFirstName());
         }
@@ -61,7 +61,7 @@ public class UserAccountServiceImpl implements UserAccountService, CommandLineRu
 
     @Override
     public RolesDto changeRolesList(String login, String role, boolean isAddRole) {
-        User user = userAccountRepository.findById(login).orElseThrow(UserNotFoundException::new);
+        UserAccount user = userAccountRepository.findById(login).orElseThrow(UserNotFoundException::new);
         boolean res;
         if (isAddRole) {
             res = user.addRole(role);
@@ -76,7 +76,7 @@ public class UserAccountServiceImpl implements UserAccountService, CommandLineRu
 
     @Override
     public void changePassword(String login, String newPassword) {
-        User user = userAccountRepository.findById(login).orElseThrow(UserNotFoundException::new);
+        UserAccount user = userAccountRepository.findById(login).orElseThrow(UserNotFoundException::new);
         String password = passwordEncoder.encode(newPassword);
         user.setPassword(password);
         userAccountRepository.save(user);
@@ -86,7 +86,7 @@ public class UserAccountServiceImpl implements UserAccountService, CommandLineRu
     public void run(String... args) throws Exception {
         if(!userAccountRepository.existsById("admin")) { //TODO
             String password = passwordEncoder.encode("admin");
-            User user = new User("admin", password, "admin", "admin");
+            UserAccount user = new UserAccount("admin", password, "admin", "admin");
             user.addRole("ADMINISTRATOR");
             userAccountRepository.save(user);
         }

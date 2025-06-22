@@ -8,6 +8,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import telran.java57.farmbackend.accounting.dao.UserAccountRepository;
+import telran.java57.farmbackend.accounting.dto.exceptions.UserNotFoundException;
+import telran.java57.farmbackend.accounting.model.UserAccount;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,14 +18,13 @@ import java.util.Collection;
 @Service
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
-
-    final PasswordEncoder passwordEncoder;
+    final UserAccountRepository userAccountRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Collection<String> authorities = new ArrayList<>();
-        authorities.add("Role_USER");
-        return new User("John", passwordEncoder.encode("123"),
-                AuthorityUtils.createAuthorityList(authorities));
+        UserAccount user = userAccountRepository.findById(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username));
+        Collection<String> authorities = user.getRoles().stream().map(r -> "ROLE_" + r).toList();
+        return new User(username, user.getPassword(), AuthorityUtils.createAuthorityList(authorities));
     }
 }

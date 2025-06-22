@@ -1,7 +1,7 @@
 package telran.java57.farmbackend.accounting.dto;
 
 import lombok.*;
-import telran.java57.farmbackend.accounting.model.User;
+import telran.java57.farmbackend.accounting.model.UserAccount;
 
 import java.util.Set;
 
@@ -16,7 +16,7 @@ public class UserDto {
     @Singular
     Set<String> roles;
 
-    public UserDto(User user) {
+    public UserDto(UserAccount user) {
         login = user.getLogin();
         firstName = user.getFirstName();
         lastName = user.getLastName();

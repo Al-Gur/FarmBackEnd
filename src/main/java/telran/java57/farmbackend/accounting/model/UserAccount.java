@@ -10,9 +10,8 @@ import java.util.Set;
 
 @Getter
 @Document(collection = "users")
-public class User {
+public class UserAccount {
     @Id
-    String id;
     String login;
     @Setter
     String password;
@@ -22,12 +21,12 @@ public class User {
     String lastName;
     Set<String> roles;
 
-    public User() {
+    public UserAccount() {
         roles = new HashSet<>();
         roles.add("USER");
     }
 
-    public User(String login, String password, String firstName, String lastName) {
+    public UserAccount(String login, String password, String firstName, String lastName) {
         this();
         this.login = login;
         this.password = password;
