@@ -1,8 +1,8 @@
-package telran.farmbackend.products.dto;
+package telran.java57.farmbackend.products.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import telran.farmbackend.products.model.Product;
+import telran.java57.farmbackend.products.model.Product;
 
 @Getter
 @NoArgsConstructor

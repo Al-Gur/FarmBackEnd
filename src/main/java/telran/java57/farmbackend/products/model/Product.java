@@ -1,4 +1,4 @@
-package telran.farmbackend.products.model;
+package telran.java57.farmbackend.products.model;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import telran.farmbackend.products.dto.ProductDto;
 
 @Getter
 @NoArgsConstructor

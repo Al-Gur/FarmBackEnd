@@ -1,4 +1,4 @@
-package telran.farmbackend;
+package telran.java57.farmbackend;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

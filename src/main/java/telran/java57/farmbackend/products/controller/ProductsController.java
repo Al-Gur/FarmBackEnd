@@ -1,9 +1,9 @@
-package telran.farmbackend.products.controller;
+package telran.java57.farmbackend.products.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import telran.farmbackend.products.dto.ProductDto;
-import telran.farmbackend.products.service.ProductsService;
+import telran.java57.farmbackend.products.dto.ProductDto;
+import telran.java57.farmbackend.products.service.ProductsService;
 
 @RestController
 @RequiredArgsConstructor
