@@ -17,5 +17,5 @@ public class User {
     String id;
     String name;
     String password;
-    Set<Role> roles;
+    Set<String> roles;
 }
