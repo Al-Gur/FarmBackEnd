@@ -84,7 +84,7 @@ public class UserAccountServiceImpl implements UserAccountService, CommandLineRu
 
     @Override
     public void run(String... args) throws Exception {
-        if(!userAccountRepository.existsById("admin")) { //TODO
+        if (!userAccountRepository.existsById("admin")) { //TODO
             String password = passwordEncoder.encode("admin");
             UserAccount user = new UserAccount("admin", password, "admin", "admin");
             user.addRole("ADMINISTRATOR");

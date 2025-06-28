@@ -36,14 +36,15 @@ public class ProductsServiceImpl implements ProductsService {
                 productDto.getProducer());
         if (!(productDto.getProducer().equals(username)) && productOld.getProducer().equals(username)) {
             throw new SecurityException();
-        }          productsRepository.save(productNew);
+        }
+        productsRepository.save(productNew);
         return new ProductDto(productOld);
     }
 
     @Override
     public ProductDto deleteProduct(String username, String productId) {
         Product product = productsRepository.findById(productId)
-                        .orElseThrow(RuntimeException::new);
+                .orElseThrow(RuntimeException::new);
         productsRepository.deleteById(productId);
         return new ProductDto(product);
     }
