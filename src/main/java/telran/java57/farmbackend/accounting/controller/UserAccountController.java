@@ -4,12 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import telran.java57.farmbackend.accounting.dto.RolesDto;
-import telran.java57.farmbackend.accounting.dto.UpdateUserDto;
 import telran.java57.farmbackend.accounting.dto.UserDto;
 import telran.java57.farmbackend.accounting.dto.UserRegisterDto;
 import telran.java57.farmbackend.accounting.service.UserAccountService;
 
 import java.security.Principal;
+import java.util.Collection;
 
 @RestController
 @RequiredArgsConstructor
@@ -34,9 +34,12 @@ public class UserAccountController {
     }
 
     @PutMapping("update")
-    public UserDto updateUser(Principal principal, @RequestBody UpdateUserDto updateUserDto){
-        return userService.updateUser(principal.getName(), updateUserDto);
+    public UserDto updateUser(Principal principal, @RequestBody String newFullName){
+        return userService.updateUser(principal.getName(), newFullName);
     }
+
+    @GetMapping("showall")
+    public Iterable<UserDto> showAll() { return userService.getAllUsers(); }
 
     @GetMapping("info/{login}")
     public UserDto getUser(@PathVariable String login){

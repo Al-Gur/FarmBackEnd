@@ -1,12 +1,13 @@
 package telran.java57.farmbackend.products.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import telran.java57.farmbackend.products.model.Product;
 
 @Getter
 @NoArgsConstructor
-//@AllArgsConstructor
+@AllArgsConstructor
 //@Builder
 public class ProductDto {
     String id;
@@ -14,10 +15,10 @@ public class ProductDto {
     Integer quantity;
     String producer;
 
-    public ProductDto(Product product) {
-        id = product.getId();
-        name = product.getName();
-        quantity = product.getQuantity();
-        producer = product.getProducer();
-    }
+//    public ProductDto(Product product) {
+//        id = product.getId();
+//        name = product.getName();
+//        quantity = product.getQuantity();
+//        producer = product.getProducer();
+//    }
 }

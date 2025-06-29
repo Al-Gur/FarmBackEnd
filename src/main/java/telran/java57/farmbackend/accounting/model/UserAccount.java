@@ -16,9 +16,7 @@ public class UserAccount {
     @Setter
     String password;
     @Setter
-    String firstName;
-    @Setter
-    String lastName;
+    String fullName;
     Set<String> roles;
 
     public UserAccount() {
@@ -26,12 +24,11 @@ public class UserAccount {
         roles.add("USER");
     }
 
-    public UserAccount(String login, String password, String firstName, String lastName) {
+    public UserAccount(String login, String password, String fullName) {
         this();
         this.login = login;
         this.password = password;
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.fullName = fullName;
     }
 
     public boolean addRole(String role){

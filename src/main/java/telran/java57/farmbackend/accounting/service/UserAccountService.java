@@ -1,9 +1,6 @@
 package telran.java57.farmbackend.accounting.service;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import telran.java57.farmbackend.accounting.dto.RolesDto;
-import telran.java57.farmbackend.accounting.dto.UpdateUserDto;
 import telran.java57.farmbackend.accounting.dto.UserDto;
 import telran.java57.farmbackend.accounting.dto.UserRegisterDto;
 
@@ -16,7 +13,9 @@ public interface UserAccountService {
 
     UserDto removeUser(String login);
 
-    UserDto updateUser(String login, UpdateUserDto updateUserDto);
+    UserDto updateUser(String login, String newFullName);
 
     RolesDto changeRolesList(String login, String role, boolean b);
+
+    Iterable<UserDto> getAllUsers();
 }

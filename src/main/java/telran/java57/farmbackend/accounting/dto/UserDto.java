@@ -11,15 +11,12 @@ import java.util.Set;
 @Builder
 public class UserDto {
     String login;
-    String firstName;
-    String lastName;
-    @Singular
+    String fullName;
     Set<String> roles;
 
     public UserDto(UserAccount user) {
         login = user.getLogin();
-        firstName = user.getFirstName();
-        lastName = user.getLastName();
+        fullName = user.getFullName();
         roles = user.getRoles();
     }
 }

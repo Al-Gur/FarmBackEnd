@@ -2,21 +2,31 @@ package telran.java57.farmbackend.products.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import telran.java57.farmbackend.accounting.dao.UserAccountRepository;
+import telran.java57.farmbackend.accounting.model.UserAccount;
 import telran.java57.farmbackend.products.dao.ProductsRepository;
 import telran.java57.farmbackend.products.dto.ProductDto;
 import telran.java57.farmbackend.products.model.Product;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class ProductsServiceImpl implements ProductsService {
     final ProductsRepository productsRepository;
+    final UserAccountRepository userAccountRepository;
+
+    private ProductDto newProductDto(Product product) {
+        String producerLogin = product.getProducer();
+        Optional<UserAccount> producer = userAccountRepository.findById(producerLogin);
+        String producerFullName = producer.isPresent() ? producer.get().getFullName() : "[" + producerLogin + "]";
+        return new ProductDto(product.getId(), product.getName(), product.getQuantity(), producerFullName);
+    }
 
     @Override
     public List<ProductDto> getAllProducts() {
-        return productsRepository.findAll().stream()
-                .map(ProductDto::new).toList();
+        return productsRepository.findAll().stream().map(this::newProductDto).toList();
     }
 
     @Override
@@ -25,7 +35,7 @@ public class ProductsServiceImpl implements ProductsService {
             throw new SecurityException();
         }
         Product product = new Product(productDto.getName(), productDto.getQuantity(), productDto.getProducer());
-        return new ProductDto(productsRepository.save(product));
+        return newProductDto(productsRepository.save(product));
     }
 
     @Override
@@ -38,7 +48,7 @@ public class ProductsServiceImpl implements ProductsService {
             throw new SecurityException();
         }
         productsRepository.save(productNew);
-        return new ProductDto(productOld);
+        return newProductDto(productOld);
     }
 
     @Override
@@ -46,6 +56,6 @@ public class ProductsServiceImpl implements ProductsService {
         Product product = productsRepository.findById(productId)
                 .orElseThrow(RuntimeException::new);
         productsRepository.deleteById(productId);
-        return new ProductDto(product);
+        return newProductDto(product);
     }
 }
