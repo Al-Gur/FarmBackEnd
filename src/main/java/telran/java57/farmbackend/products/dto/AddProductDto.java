@@ -7,10 +7,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-//@Builder
-public class ProductDto {
-    String id;
+public class AddProductDto {
     String name;
     Integer quantity;
-    String producer;
 }

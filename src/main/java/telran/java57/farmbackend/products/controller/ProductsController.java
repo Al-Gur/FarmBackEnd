@@ -2,6 +2,7 @@ package telran.java57.farmbackend.products.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import telran.java57.farmbackend.products.dto.AddProductDto;
 import telran.java57.farmbackend.products.dto.ProductDto;
 import telran.java57.farmbackend.products.service.ProductsService;
 
@@ -19,7 +20,7 @@ public class ProductsController {
     }
 
     @PostMapping("product")
-    public ProductDto addProduct(Principal principal, @RequestBody ProductDto productDto) {
+    public ProductDto addProduct(Principal principal, @RequestBody AddProductDto productDto) {
         return productsService.addProduct(principal.getName(), productDto);
     }
 

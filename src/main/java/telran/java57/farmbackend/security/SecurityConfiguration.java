@@ -21,6 +21,9 @@ public class SecurityConfiguration {
         httpSecurity.authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/user/register").permitAll()
 
+                .requestMatchers("user/showall")
+                .access(new WebExpressionAuthorizationManager("hasRole('ADMINISTRATOR')"))
+
                 .requestMatchers("/user/info/{login}")
                 .access(new WebExpressionAuthorizationManager("hasRole('ADMINISTRATOR') " +
                         "or authentication.name == #login"))
@@ -29,16 +32,11 @@ public class SecurityConfiguration {
                 .access(new WebExpressionAuthorizationManager("hasRole('ADMINISTRATOR') " +
                         "or authentication.name == #login"))
 
-                .requestMatchers(HttpMethod.PUT, "/account/user/{login}")
-                .access(new WebExpressionAuthorizationManager("authentication.name == #login"))
+                .requestMatchers("/user/addrole/{login}/{role}")
+                .access(new WebExpressionAuthorizationManager("hasRole('ADMINISTRATOR')"))
 
-                .requestMatchers("addrole/{login}/{role}")
-                .access(new WebExpressionAuthorizationManager("hasRole('ADMINISTRATOR') " +
-                        "or authentication.name == #login"))
-
-                .requestMatchers("removerole/{login}/{role}")
-                .access(new WebExpressionAuthorizationManager("hasRole('ADMINISTRATOR') " +
-                        "or authentication.name == #login"))
+                .requestMatchers("/user/removerole/{login}/{role}")
+                .access(new WebExpressionAuthorizationManager("hasRole('ADMINISTRATOR')"))
 
                 .requestMatchers("products/showall").permitAll()
 

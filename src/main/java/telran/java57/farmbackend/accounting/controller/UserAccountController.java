@@ -9,7 +9,6 @@ import telran.java57.farmbackend.accounting.dto.UserRegisterDto;
 import telran.java57.farmbackend.accounting.service.UserAccountService;
 
 import java.security.Principal;
-import java.util.Collection;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,41 +22,43 @@ public class UserAccountController {
     }
 
     @PostMapping("login")
-    public UserDto login(Principal principal){
+    public UserDto login(Principal principal) {
         return userService.getUser(principal.getName());
     }
 
     @PutMapping("password")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void changePassword(Principal principal, @RequestHeader("X-Password") String newPassword){
+    public void changePassword(Principal principal, @RequestHeader("X-Password") String newPassword) {
         userService.changePassword(principal.getName(), newPassword);
     }
 
     @PutMapping("update")
-    public UserDto updateUser(Principal principal, @RequestBody String newFullName){
+    public UserDto updateUser(Principal principal, @RequestBody String newFullName) {
         return userService.updateUser(principal.getName(), newFullName);
     }
 
     @GetMapping("showall")
-    public Iterable<UserDto> showAll() { return userService.getAllUsers(); }
+    public Iterable<UserDto> showAll() {
+        return userService.getAllUsers();
+    }
 
     @GetMapping("info/{login}")
-    public UserDto getUser(@PathVariable String login){
+    public UserDto getUser(@PathVariable String login) {
         return userService.getUser(login);
     }
 
     @DeleteMapping("delete/{login}")
-    public UserDto removeUser(@PathVariable String login){
+    public UserDto removeUser(@PathVariable String login) {
         return userService.removeUser(login);
     }
 
     @PutMapping("addrole/{login}/{role}")
-    public RolesDto addRole(@PathVariable String login, @PathVariable String role){
-        return  userService.changeRolesList(login,role,true);
+    public RolesDto addRole(@PathVariable String login, @PathVariable String role) {
+        return userService.changeRolesList(login, role, true);
     }
 
     @DeleteMapping("removerole/{login}/{role}")
-    public RolesDto removeRole(@PathVariable String login, @PathVariable String role){
-        return userService.changeRolesList(login,role,false);
+    public RolesDto removeRole(@PathVariable String login, @PathVariable String role) {
+        return userService.changeRolesList(login, role, false);
     }
 }

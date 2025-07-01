@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import telran.java57.farmbackend.accounting.dao.UserAccountRepository;
 import telran.java57.farmbackend.accounting.model.UserAccount;
 import telran.java57.farmbackend.products.dao.ProductsRepository;
+import telran.java57.farmbackend.products.dto.AddProductDto;
 import telran.java57.farmbackend.products.dto.ProductDto;
 import telran.java57.farmbackend.products.model.Product;
 
@@ -30,11 +31,8 @@ public class ProductsServiceImpl implements ProductsService {
     }
 
     @Override
-    public ProductDto addProduct(String username, ProductDto productDto) {
-        if (!productDto.getProducer().equals(username)) {
-            throw new SecurityException();
-        }
-        Product product = new Product(productDto.getName(), productDto.getQuantity(), productDto.getProducer());
+    public ProductDto addProduct(String username, AddProductDto productDto) {
+        Product product = new Product(productDto.getName(), productDto.getQuantity(), username);
         return newProductDto(productsRepository.save(product));
     }
 
@@ -55,6 +53,13 @@ public class ProductsServiceImpl implements ProductsService {
     public ProductDto deleteProduct(String username, String productId) {
         Product product = productsRepository.findById(productId)
                 .orElseThrow(RuntimeException::new);
+        if (!username.equals(product.getProducer())) {
+            UserAccount producer = userAccountRepository.findById(username)
+                    .orElseThrow(RuntimeException::new);
+            if (!producer.getRoles().contains("ADMINISTRATOR")) {
+                throw new SecurityException();
+            }
+        }
         productsRepository.deleteById(productId);
         return newProductDto(product);
     }
