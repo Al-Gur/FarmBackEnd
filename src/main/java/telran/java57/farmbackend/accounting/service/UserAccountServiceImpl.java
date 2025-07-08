@@ -81,14 +81,14 @@ public class UserAccountServiceImpl implements UserAccountService, CommandLineRu
 
     @Override
     public void run(String... args) throws Exception {
-        if (userAccountRepository.count() == 0) {
-            ;//TODO
-        }
-//        if (!userAccountRepository.existsById("admin")) {
-//            String password = passwordEncoder.encode("admin");
-//            UserAccount user = new UserAccount("admin", password, "admin", "admin");
-//            user.addRole("ADMINISTRATOR");
-//            userAccountRepository.save(user);
+//        if (userAccountRepository.count() == 0) {
+//            ;
 //        }
+        if (!userAccountRepository.existsById("admin")) {
+            String password = passwordEncoder.encode("adm11");
+            UserAccount user = new UserAccount("admin", password, "admin");//TODO
+            user.addRole("ADMINISTRATOR");
+            userAccountRepository.save(user);
+        }
     }
 }

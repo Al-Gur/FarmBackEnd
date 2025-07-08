@@ -9,6 +9,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.expression.WebExpressionAuthorizationManager;
+import org.springframework.web.cors.CorsConfiguration;
+
+import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity
@@ -16,8 +19,9 @@ public class SecurityConfiguration {
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.httpBasic(Customizer.withDefaults());
+        httpSecurity.httpBasic(withDefaults());
         httpSecurity.csrf(AbstractHttpConfigurer::disable);
+        httpSecurity.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues());
         httpSecurity.authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/user/register").permitAll()
 
