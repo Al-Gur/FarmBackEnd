@@ -9,5 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class AddProductDto {
     String name;
+    String image;
+    String category;
     Integer quantity;
 }

@@ -16,11 +16,28 @@ public class Product {
     @Id
     String id;
     String name;
+    String image;
+    String category;
     Integer quantity;
     String producer;
 
     public Product(String name, Integer quantity, String producer) {
         this.name = name;
+        this.quantity = quantity;
+        this.producer = producer;
+    }
+
+    public Product(String id, String name, Integer quantity, String producer) {
+        this.id = id;
+        this.name = name;
+        this.quantity = quantity;
+        this.producer = producer;
+    }
+
+    public Product(String name, String image, String category, Integer quantity, String producer) {
+        this.name = name;
+        this.image = image;
+        this.category = category;
         this.quantity = quantity;
         this.producer = producer;
     }

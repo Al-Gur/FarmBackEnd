@@ -22,7 +22,8 @@ public class ProductsServiceImpl implements ProductsService {
         String producerLogin = product.getProducer();
         Optional<UserAccount> producer = userAccountRepository.findById(producerLogin);
         String producerFullName = producer.isPresent() ? producer.get().getFullName() : "[" + producerLogin + "]";
-        return new ProductDto(product.getId(), product.getName(), product.getQuantity(), producerFullName);
+        return new ProductDto(product.getId(), product.getName(), product.getImage(), product.getCategory(),
+                product.getQuantity(), producerFullName);
     }
 
     @Override
@@ -32,7 +33,8 @@ public class ProductsServiceImpl implements ProductsService {
 
     @Override
     public ProductDto addProduct(String username, AddProductDto productDto) {
-        Product product = new Product(productDto.getName(), productDto.getQuantity(), username);
+        Product product = new Product(productDto.getName(), productDto.getImage(), productDto.getCategory(),
+                productDto.getQuantity(), username);
         return newProductDto(productsRepository.save(product));
     }
 
@@ -40,8 +42,8 @@ public class ProductsServiceImpl implements ProductsService {
     public ProductDto updateProduct(String username, ProductDto productDto) {
         Product productOld = productsRepository.findById(productDto.getId())
                 .orElseThrow(RuntimeException::new);
-        Product productNew = new Product(productDto.getId(), productDto.getName(), productDto.getQuantity(),
-                productDto.getProducer());
+        Product productNew = new Product(productDto.getId(), productDto.getName(), productDto.getImage(),
+                productDto.getCategory(), productDto.getQuantity(), productDto.getProducer());
         if (!(productDto.getProducer().equals(username)) && productOld.getProducer().equals(username)) {
             throw new SecurityException();
         }
