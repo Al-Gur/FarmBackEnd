@@ -9,6 +9,7 @@ import telran.java57.farmbackend.products.dto.AddProductDto;
 import telran.java57.farmbackend.products.dto.ProductDto;
 import telran.java57.farmbackend.products.model.Product;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,7 +44,7 @@ public class ProductsServiceImpl implements ProductsService {
         Product productOld = productsRepository.findById(productDto.getId())
                 .orElseThrow(RuntimeException::new);
         Product productNew = new Product(productDto.getId(), productDto.getName(), productDto.getImage(),
-                productDto.getCategory(), productDto.getQuantity(), productDto.getProducer());
+                productDto.getCategory(), productDto.getQuantity(), new ArrayList<>(), productDto.getProducer());
         if (!(productDto.getProducer().equals(username)) && productOld.getProducer().equals(username)) {
             throw new SecurityException();
         }

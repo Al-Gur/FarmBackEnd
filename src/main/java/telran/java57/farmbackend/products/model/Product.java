@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
+
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,26 +21,24 @@ public class Product {
     String image;
     String category;
     Integer quantity;
+    ArrayList<Order> orders;
     String producer;
 
     public Product(String name, Integer quantity, String producer) {
         this.name = name;
         this.quantity = quantity;
         this.producer = producer;
+        this.orders = new ArrayList<>();
     }
 
     public Product(String id, String name, Integer quantity, String producer) {
+        this(name, quantity, producer);
         this.id = id;
-        this.name = name;
-        this.quantity = quantity;
-        this.producer = producer;
     }
 
     public Product(String name, String image, String category, Integer quantity, String producer) {
-        this.name = name;
+        this(name, quantity, producer);
         this.image = image;
         this.category = category;
-        this.quantity = quantity;
-        this.producer = producer;
     }
 }
