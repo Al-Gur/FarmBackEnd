@@ -21,36 +21,44 @@ public class Product {
     String name;
     String image;
     String category;
+    Integer price;
     Integer quantity;
     Integer remainingQuantity;
     ArrayList<Order> orders;
     String producer;
 
-    public Product(String name, Integer quantity, String producer) {
+    public Product(String name, Integer price, Integer quantity, String producer) {
         this.name = name;
+        this.price = price;
         this.quantity = quantity;
         this.remainingQuantity = quantity;
         this.orders = new ArrayList<>();
         this.producer = producer;
     }
 
-    public Product(String id, String name, Integer quantity, String producer) {
-        this(name, quantity, producer);
+    public Product(String id, String name, Integer price, Integer quantity, String producer) {
+        this(name, price, quantity, producer);
         this.id = id;
     }
 
-    public Product(String name, String image, String category, Integer quantity, String producer) {
-        this(name, quantity, producer);
+    public Product(String name, String image, String category, Integer price, Integer quantity, String producer) {
+        this(name, price, quantity, producer);
         this.image = image;
         this.category = category;
     }
 
     public Integer calculateRemainedQuantity() {
+        if (orders == null) {
+            orders = new ArrayList<>();
+        }
         remainingQuantity = quantity - orders.stream().map(Order::getQuantity).reduce(0, Integer::sum);
         return remainingQuantity;
     }
 
     public Integer getRefreshedRemainingQuantity() {
+        if (orders == null) {
+            orders = new ArrayList<>();
+        }
         LocalDateTime now = LocalDateTime.now();
         orders = new ArrayList<>(orders.stream()
                 .filter(order -> order.getDeadline().isAfter(now))

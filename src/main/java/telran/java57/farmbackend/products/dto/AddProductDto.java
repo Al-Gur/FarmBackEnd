@@ -11,5 +11,6 @@ public class AddProductDto {
     String name;
     String image;
     String category;
+    Integer price;
     Integer quantity;
 }

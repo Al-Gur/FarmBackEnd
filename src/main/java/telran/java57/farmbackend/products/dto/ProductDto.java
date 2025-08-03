@@ -13,6 +13,7 @@ public class ProductDto {
     String name;
     String image;
     String category;
+    Integer price;
     Integer quantity;
     Integer availableQuantity;
     String producer;
