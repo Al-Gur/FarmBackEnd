@@ -3,6 +3,7 @@ package telran.java57.farmbackend.products.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import telran.java57.farmbackend.products.dto.AddProductDto;
+import telran.java57.farmbackend.products.dto.OrderDto;
 import telran.java57.farmbackend.products.dto.ProductDto;
 import telran.java57.farmbackend.products.service.ProductsService;
 
@@ -32,5 +33,10 @@ public class ProductsController {
     @DeleteMapping("product/{productId}")
     public ProductDto deleteProduct(Principal principal, @PathVariable String productId) {
         return productsService.deleteProduct(principal.getName(), productId);
+    }
+
+    @PutMapping("preorder")
+    public boolean preOrderProduct(Principal principal, @RequestBody OrderDto orderDto) {
+        return productsService.preOrderProduct(principal.getName(), orderDto);
     }
 }

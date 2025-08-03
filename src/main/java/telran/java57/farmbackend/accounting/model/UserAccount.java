@@ -4,7 +4,9 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import telran.java57.farmbackend.products.dto.OrderDto;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -18,6 +20,7 @@ public class UserAccount {
     @Setter
     String fullName;
     Set<String> roles;
+    ArrayList<OrderDto> orders;
 
     public UserAccount() {
         roles = new HashSet<>();

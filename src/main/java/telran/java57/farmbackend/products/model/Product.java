@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 @Getter
@@ -21,14 +22,16 @@ public class Product {
     String image;
     String category;
     Integer quantity;
+    Integer remainingQuantity;
     ArrayList<Order> orders;
     String producer;
 
     public Product(String name, Integer quantity, String producer) {
         this.name = name;
         this.quantity = quantity;
-        this.producer = producer;
+        this.remainingQuantity = quantity;
         this.orders = new ArrayList<>();
+        this.producer = producer;
     }
 
     public Product(String id, String name, Integer quantity, String producer) {
@@ -40,5 +43,18 @@ public class Product {
         this(name, quantity, producer);
         this.image = image;
         this.category = category;
+    }
+
+    public Integer calculateRemainedQuantity() {
+        remainingQuantity = quantity - orders.stream().map(Order::getQuantity).reduce(0, Integer::sum);
+        return remainingQuantity;
+    }
+
+    public Integer getRefreshedRemainingQuantity() {
+        LocalDateTime now = LocalDateTime.now();
+        orders = new ArrayList<>(orders.stream()
+                .filter(order -> order.getDeadline().isAfter(now))
+                .toList());
+        return calculateRemainedQuantity();
     }
 }

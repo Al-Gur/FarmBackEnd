@@ -6,9 +6,12 @@ import telran.java57.farmbackend.accounting.dao.UserAccountRepository;
 import telran.java57.farmbackend.accounting.model.UserAccount;
 import telran.java57.farmbackend.products.dao.ProductsRepository;
 import telran.java57.farmbackend.products.dto.AddProductDto;
+import telran.java57.farmbackend.products.dto.OrderDto;
 import telran.java57.farmbackend.products.dto.ProductDto;
+import telran.java57.farmbackend.products.model.Order;
 import telran.java57.farmbackend.products.model.Product;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -24,7 +27,7 @@ public class ProductsServiceImpl implements ProductsService {
         Optional<UserAccount> producer = userAccountRepository.findById(producerLogin);
         String producerFullName = producer.isPresent() ? producer.get().getFullName() : "[" + producerLogin + "]";
         return new ProductDto(product.getId(), product.getName(), product.getImage(), product.getCategory(),
-                product.getQuantity(), producerFullName);
+                product.getQuantity(), product.getRefreshedRemainingQuantity(), producerFullName);
     }
 
     @Override
@@ -44,7 +47,8 @@ public class ProductsServiceImpl implements ProductsService {
         Product productOld = productsRepository.findById(productDto.getId())
                 .orElseThrow(RuntimeException::new);
         Product productNew = new Product(productDto.getId(), productDto.getName(), productDto.getImage(),
-                productDto.getCategory(), productDto.getQuantity(), new ArrayList<>(), productDto.getProducer());
+                productDto.getCategory(), productDto.getQuantity(), productDto.getQuantity(),
+                new ArrayList<>(), productDto.getProducer());
         if (!(productDto.getProducer().equals(username)) && productOld.getProducer().equals(username)) {
             throw new SecurityException();
         }
@@ -65,5 +69,25 @@ public class ProductsServiceImpl implements ProductsService {
         }
         productsRepository.deleteById(productId);
         return newProductDto(product);
+    }
+
+    @Override
+    public boolean preOrderProduct(String userName, OrderDto orderDto) {
+        Product product = productsRepository.findById(orderDto.getProductId())
+                .orElseThrow(RuntimeException::new);
+        if (orderDto.getQuantity() <= product.getRefreshedRemainingQuantity()) {
+            product.getOrders().add(new Order(orderDto.getQuantity(), userName, LocalDateTime.now().plusHours(1)));
+            product.calculateRemainedQuantity();
+
+            UserAccount buyer = userAccountRepository.findById(userName)
+                    .orElseThrow(RuntimeException::new);
+            buyer.getOrders().add(orderDto);
+
+            userAccountRepository.save(buyer);
+            productsRepository.save(product);
+            return true;
+        } else {
+            return false;
+        }
     }
 }

@@ -14,5 +14,6 @@ public class ProductDto {
     String image;
     String category;
     Integer quantity;
+    Integer availableQuantity;
     String producer;
 }
