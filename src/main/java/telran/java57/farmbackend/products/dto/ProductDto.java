@@ -15,6 +15,5 @@ public class ProductDto {
     String category;
     Integer price;
     Integer quantity;
-    Integer availableQuantity;
     String producer;
 }
