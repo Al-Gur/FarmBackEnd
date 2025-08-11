@@ -39,4 +39,10 @@ public class ProductsController {
     public boolean preOrderProduct(Principal principal, @RequestBody OrderDto orderDto) {
         return productsService.preOrderProduct(principal.getName(), orderDto);
     }
+
+    @GetMapping("cart/{login}")
+    public Iterable<ProductDto> getUserCart(@PathVariable String login) {
+        return productsService.getUserCart(login);
+    }
+
 }

@@ -11,6 +11,10 @@ import telran.java57.farmbackend.accounting.dto.UserRegisterDto;
 import telran.java57.farmbackend.accounting.dto.exceptions.UserExistsException;
 import telran.java57.farmbackend.accounting.dto.exceptions.UserNotFoundException;
 import telran.java57.farmbackend.accounting.model.UserAccount;
+import telran.java57.farmbackend.products.dao.ProductsRepository;
+import telran.java57.farmbackend.products.dto.OrderDto;
+import telran.java57.farmbackend.products.dto.ProductDto;
+import telran.java57.farmbackend.products.model.Product;
 
 
 @Service

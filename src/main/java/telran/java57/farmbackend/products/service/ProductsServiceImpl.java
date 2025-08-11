@@ -3,6 +3,7 @@ package telran.java57.farmbackend.products.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import telran.java57.farmbackend.accounting.dao.UserAccountRepository;
+import telran.java57.farmbackend.accounting.dto.exceptions.UserNotFoundException;
 import telran.java57.farmbackend.accounting.model.UserAccount;
 import telran.java57.farmbackend.products.dao.ProductsRepository;
 import telran.java57.farmbackend.products.dto.AddProductDto;
@@ -78,10 +79,23 @@ public class ProductsServiceImpl implements ProductsService {
             buyer.getOrders().add(orderDto);
 
             userAccountRepository.save(buyer);
-            productsRepository.save(product);
+            //productsRepository.save(product);
             return true;
         } else {
             return false;
         }
+    }
+
+    @Override
+    public Iterable<ProductDto> getUserCart(String login) {
+        UserAccount user = userAccountRepository.findById(login).orElseThrow(UserNotFoundException::new);
+        return user.getOrders().stream()
+                .map(order -> {
+                    Product product = productsRepository.findById(order.getProductId())
+                            .orElseThrow(RuntimeException::new);
+                    product.setQuantity(order.getQuantity());
+                    return product;
+                })
+                .map(this::newProductDto).toList();
     }
 }

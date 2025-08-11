@@ -16,4 +16,6 @@ public interface ProductsService {
     ProductDto deleteProduct(String username, String productId);
 
     boolean preOrderProduct(String userName, OrderDto orderDto);
+
+    Iterable<ProductDto> getUserCart(String login);
 }

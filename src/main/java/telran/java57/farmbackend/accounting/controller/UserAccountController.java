@@ -7,6 +7,8 @@ import telran.java57.farmbackend.accounting.dto.RolesDto;
 import telran.java57.farmbackend.accounting.dto.UserDto;
 import telran.java57.farmbackend.accounting.dto.UserRegisterDto;
 import telran.java57.farmbackend.accounting.service.UserAccountService;
+import telran.java57.farmbackend.products.dto.OrderDto;
+import telran.java57.farmbackend.products.dto.ProductDto;
 
 import java.security.Principal;
 
