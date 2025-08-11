@@ -45,6 +45,10 @@ public class SecurityConfiguration {
 
                 .requestMatchers("products/showall").permitAll()
 
+                .requestMatchers("/products/cart/{login}")
+                .access(new WebExpressionAuthorizationManager("hasRole('ADMINISTRATOR') " +
+                        "or authentication.name == #login"))
+
                 .anyRequest().authenticated()
         );
         return httpSecurity.build();
