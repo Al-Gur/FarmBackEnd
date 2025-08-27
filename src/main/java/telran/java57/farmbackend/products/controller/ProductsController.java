@@ -3,6 +3,7 @@ package telran.java57.farmbackend.products.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import telran.java57.farmbackend.products.dto.AddProductDto;
+import telran.java57.farmbackend.products.dto.FilterDto;
 import telran.java57.farmbackend.products.dto.OrderDto;
 import telran.java57.farmbackend.products.dto.ProductDto;
 import telran.java57.farmbackend.products.service.ProductsService;
@@ -18,6 +19,11 @@ public class ProductsController {
     @GetMapping("showall")
     public Iterable<ProductDto> showAll() {
         return productsService.getAllProducts();
+    }
+
+    @GetMapping("show")
+    public Iterable<ProductDto> show(@RequestBody FilterDto filterDto) {
+        return productsService.getProducts(filterDto);
     }
 
     @PostMapping("product")
