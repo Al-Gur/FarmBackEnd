@@ -14,6 +14,7 @@ import telran.java57.farmbackend.products.model.Product;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -36,10 +37,13 @@ public class ProductsServiceImpl implements ProductsService {
 
     @Override
     public Iterable<ProductDto> getProducts(FilterDto filterDto) {
-        return productsRepository.findAll().stream()
-                .filter(product ->
-                        filterDto.getSelectedCategory().isEmpty()
-                                || filterDto.getSelectedCategory().equals(product.getCategory()))
+        Stream<Product> productStream = filterDto.getSelectedCategory().isEmpty() ?
+                productsRepository.findAll().stream()
+                : productsRepository.findProductsByCategory(filterDto.getSelectedCategory());
+        return productStream
+//                .filter(product ->
+//                        filterDto.getSelectedCategory().isEmpty()
+//                                || filterDto.getSelectedCategory().equals(product.getCategory()))
                 .filter(product -> filterDto.getMaxPrice() == 0 || filterDto.getMaxPrice() >= product.getPrice())
                 .sorted((p1, p2) -> {
                     return switch (filterDto.getSortBy()) {
