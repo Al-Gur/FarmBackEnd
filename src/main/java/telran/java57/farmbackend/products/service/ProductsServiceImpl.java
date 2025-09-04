@@ -7,7 +7,6 @@ import telran.java57.farmbackend.accounting.dto.exceptions.UserNotFoundException
 import telran.java57.farmbackend.accounting.model.UserAccount;
 import telran.java57.farmbackend.products.dao.ProductsRepository;
 import telran.java57.farmbackend.products.dto.AddProductDto;
-import telran.java57.farmbackend.products.dto.FilterDto;
 import telran.java57.farmbackend.products.dto.OrderDto;
 import telran.java57.farmbackend.products.dto.ProductDto;
 import telran.java57.farmbackend.products.model.Product;
@@ -36,24 +35,21 @@ public class ProductsServiceImpl implements ProductsService {
     }
 
     @Override
-    public Iterable<ProductDto> getProducts(FilterDto filterDto) {
-        Stream<Product> productStream = filterDto.getSelectedCategory().isEmpty() ?
-                productsRepository.findAll().stream()
-                : productsRepository.findProductsByCategory(filterDto.getSelectedCategory());
-        return productStream
-//                .filter(product ->
-//                        filterDto.getSelectedCategory().isEmpty()
-//                                || filterDto.getSelectedCategory().equals(product.getCategory()))
-                .filter(product -> filterDto.getMaxPrice() == 0 || filterDto.getMaxPrice() >= product.getPrice())
-                .sorted((p1, p2) -> {
-                    return switch (filterDto.getSortBy()) {
-                        case "Name" -> p1.getName().compareToIgnoreCase(p2.getName());
-                        case "Price" -> p1.getPrice() - p2.getPrice();
-                        case "Category" -> p1.getCategory().compareToIgnoreCase(p2.getCategory());
-                        default -> 1;
-                    };
-                })
-                .map(this::newProductDto).toList();
+    public Iterable<ProductDto> getProducts(String selectedCategory, Integer maxPrice, String sortBy) {
+        maxPrice = maxPrice > 0 ? maxPrice : Integer.MAX_VALUE;
+        Stream<Product> productStream = selectedCategory.isEmpty() ?
+                productsRepository.findProductsByPriceBefore(maxPrice)
+                : productsRepository.findProductsByCategoryAndPriceBefore(selectedCategory, maxPrice);
+        if (!sortBy.isEmpty()) {
+            productStream = productStream.sorted((p1, p2) -> switch (sortBy) {
+                case "Name" -> p1.getName().compareToIgnoreCase(p2.getName());
+                case "Price" -> p1.getPrice() - p2.getPrice();
+                case "Category" -> p1.getCategory().compareToIgnoreCase(p2.getCategory());
+                case "Producer" -> p1.getProducer().compareToIgnoreCase(p2.getProducer());
+                default -> 1;
+            });
+        }
+        return productStream.map(this::newProductDto).toList();
     }
 
     @Override
