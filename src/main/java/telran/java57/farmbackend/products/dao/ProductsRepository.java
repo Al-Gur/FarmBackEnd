@@ -7,8 +7,6 @@ import telran.java57.farmbackend.products.model.Product;
 import java.util.stream.Stream;
 
 public interface ProductsRepository extends MongoRepository<Product, String> {
-    Stream<Product> findProductsByCategory(String selectedCategory);
-
     Stream<Product> findProductsByPriceBefore(Integer priceBefore);
 
     Stream<Product> findProductsByCategoryAndPriceBefore(String category, Integer priceBefore);

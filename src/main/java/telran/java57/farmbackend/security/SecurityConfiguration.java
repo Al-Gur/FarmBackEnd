@@ -44,8 +44,8 @@ public class SecurityConfiguration {
                 .access(new WebExpressionAuthorizationManager("hasRole('ADMINISTRATOR')"))
 
                 .requestMatchers("products/showall").permitAll()
-                .requestMatchers("products/show/category={selectedCategory}&maxprice={maxPrice}&sort={sortBy}")
-                    .permitAll()
+                .requestMatchers("products/show").permitAll()
+                .requestMatchers("products/show/**").permitAll()
 
                 .requestMatchers("/products/cart/{login}")
                 .access(new WebExpressionAuthorizationManager("hasRole('ADMINISTRATOR') " +
