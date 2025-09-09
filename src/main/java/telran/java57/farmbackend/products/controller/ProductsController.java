@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import telran.java57.farmbackend.products.dto.AddProductDto;
 import telran.java57.farmbackend.products.dto.OrderDto;
 import telran.java57.farmbackend.products.dto.ProductDto;
+import telran.java57.farmbackend.products.dto.ProductListDto;
 import telran.java57.farmbackend.products.service.ProductsService;
 
 import java.security.Principal;
@@ -16,13 +17,13 @@ public class ProductsController {
     final ProductsService productsService;
 
     @GetMapping("showall")
-    public Iterable<ProductDto> showAll() {
+    public ProductListDto showAll() {
         return productsService.getAllProducts();
     }
 
     @GetMapping("show/category={selectedCategory}&maxprice={maxPrice}&sort={sortBy}")
-    public Iterable<ProductDto> show(@PathVariable String selectedCategory, @PathVariable Integer maxPrice,
-                                     @PathVariable String sortBy) {
+    public ProductListDto show(@PathVariable String selectedCategory, @PathVariable Integer maxPrice,
+                               @PathVariable String sortBy) {
         return productsService.getProducts(selectedCategory, maxPrice, sortBy);
     }
 
@@ -34,6 +35,11 @@ public class ProductsController {
     @PutMapping("product")
     public ProductDto updateProduct(Principal principal, @RequestBody ProductDto productDto) {
         return productsService.updateProduct(principal.getName(), productDto);
+    }
+
+    @PutMapping("reset_categories")
+    public void resetCategories(Principal principal) {
+        productsService.resetProductsCategories();
     }
 
     @DeleteMapping("product/{productId}")

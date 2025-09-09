@@ -5,13 +5,12 @@ import org.springframework.stereotype.Service;
 import telran.java57.farmbackend.accounting.dao.UserAccountRepository;
 import telran.java57.farmbackend.accounting.dto.exceptions.UserNotFoundException;
 import telran.java57.farmbackend.accounting.model.UserAccount;
+import telran.java57.farmbackend.products.dao.CategoriesRepository;
 import telran.java57.farmbackend.products.dao.ProductsRepository;
-import telran.java57.farmbackend.products.dto.AddProductDto;
-import telran.java57.farmbackend.products.dto.OrderDto;
-import telran.java57.farmbackend.products.dto.ProductDto;
+import telran.java57.farmbackend.products.dto.*;
 import telran.java57.farmbackend.products.model.Product;
+import telran.java57.farmbackend.products.model.ProductCategory;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -19,6 +18,7 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class ProductsServiceImpl implements ProductsService {
     final ProductsRepository productsRepository;
+    final CategoriesRepository categoriesRepository;
     final UserAccountRepository userAccountRepository;
 
     private ProductDto newProductDto(Product product) {
@@ -29,13 +29,49 @@ public class ProductsServiceImpl implements ProductsService {
                 product.getPrice(), product.getQuantity(), producerFullName);
     }
 
+    private void addToCategory(String category) {
+        ProductCategory productCategory = categoriesRepository.findById(category)
+                .orElseGet(() -> new ProductCategory(category, 0));
+        productCategory.setCount(productCategory.getCount() + 1);
+        categoriesRepository.save(productCategory);
+    }
+
+    private void removeFromCategory(String category) {
+        Optional<ProductCategory> existingCategory = categoriesRepository.findById(category);
+        if (existingCategory.isPresent()) {
+            ProductCategory productCategory = existingCategory.get();
+            productCategory.setCount(productCategory.getCount() - 1);
+            categoriesRepository.save(productCategory);
+        }
+    }
+
+
+    public Iterable<ProductCategoryDto> getProductCategories() {
+        return categoriesRepository.findAll().stream()
+                .map(category ->
+                        new ProductCategoryDto(category.getCategory(), category.getCount()))
+                .toList();
+    }
+
+    public Iterable<ProductCategoryDto> getEmptyProductCategories() {
+        return categoriesRepository.findAll().stream()
+                .filter(category -> category.getCount() <= 0)
+                .map(category ->
+                        new ProductCategoryDto(category.getCategory(), category.getCount()))
+                .toList();
+    }
+
+
     @Override
-    public List<ProductDto> getAllProducts() {
-        return productsRepository.findAll().stream().map(this::newProductDto).toList();
+    public ProductListDto getAllProducts() {
+        return new ProductListDto(
+                productsRepository.findAll().stream().map(this::newProductDto).toList(),
+                getProductCategories()
+        );
     }
 
     @Override
-    public Iterable<ProductDto> getProducts(String selectedCategory, Integer maxPrice, String sortBy) {
+    public ProductListDto getProducts(String selectedCategory, Integer maxPrice, String sortBy) {
         maxPrice = maxPrice > 0 ? maxPrice : Integer.MAX_VALUE;
         Stream<Product> productStream = selectedCategory.isEmpty() ?
                 productsRepository.findProductsByPriceBefore(maxPrice)
@@ -49,15 +85,16 @@ public class ProductsServiceImpl implements ProductsService {
                 default -> 1;
             });
         }
-        return productStream.map(this::newProductDto).toList();
+        return new ProductListDto(productStream.map(this::newProductDto).toList(), getProductCategories());
     }
 
     @Override
     public ProductDto addProduct(String username, AddProductDto productDto) {
-        Product product = new Product(productDto.getName(), productDto.getImage(), productDto.getCategory(),
-                productDto.getPrice(),
-                productDto.getQuantity(), username);
-        return newProductDto(productsRepository.save(product));
+        Product product = new Product(productDto.getName(), productDto.getImage(),
+                productDto.getCategory(), productDto.getPrice(), productDto.getQuantity(), username);
+        product = productsRepository.save(product);
+        addToCategory(product.getCategory());
+        return newProductDto(product);
     }
 
     @Override
@@ -66,10 +103,14 @@ public class ProductsServiceImpl implements ProductsService {
                 .orElseThrow(RuntimeException::new);
         Product productNew = new Product(productDto.getId(), productDto.getName(), productDto.getImage(),
                 productDto.getCategory(), productDto.getPrice(), productDto.getQuantity(), productDto.getProducer());
-        if (!(productDto.getProducer().equals(username)) && productOld.getProducer().equals(username)) {
+        if (!(productDto.getProducer().equals(username) && productOld.getProducer().equals(username))) {
             throw new SecurityException();
         }
-        productsRepository.save(productNew);
+        productNew = productsRepository.save(productNew);
+        if (!productNew.getCategory().equals(productOld.getCategory())) {
+            removeFromCategory(productOld.getCategory());
+            addToCategory(productNew.getCategory());
+        }
         return newProductDto(productOld);
     }
 
@@ -85,8 +126,16 @@ public class ProductsServiceImpl implements ProductsService {
             }
         }
         productsRepository.deleteById(productId);
+        removeFromCategory(product.getCategory());
         return newProductDto(product);
     }
+
+
+    public void resetProductsCategories() {
+        categoriesRepository.deleteAll();
+        productsRepository.findAll().forEach(product -> addToCategory(product.getCategory()));
+    }
+
 
     @Override
     public boolean preOrderProduct(String userName, OrderDto orderDto) {

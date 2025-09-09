@@ -47,6 +47,9 @@ public class SecurityConfiguration {
                 .requestMatchers("products/show").permitAll()
                 .requestMatchers("products/show/**").permitAll()
 
+                .requestMatchers("products/reset_categories")
+                .access(new WebExpressionAuthorizationManager("hasRole('ADMINISTRATOR')"))
+
                 .requestMatchers("/products/cart/{login}")
                 .access(new WebExpressionAuthorizationManager("hasRole('ADMINISTRATOR') " +
                         "or authentication.name == #login"))
