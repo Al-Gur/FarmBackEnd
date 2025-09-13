@@ -53,7 +53,7 @@ public class ProductsServiceImpl implements ProductsService {
                         .map(category ->
                                 new ProductCategoryDto(category.getCategory(), category.getCount()))
                         .toList());
-        productCategories.add(0, new ProductCategoryDto("", (int) productsRepository.count()));
+        productCategories.add(0, new ProductCategoryDto("All", (int) productsRepository.count()));
         return productCategories;
     }
 
