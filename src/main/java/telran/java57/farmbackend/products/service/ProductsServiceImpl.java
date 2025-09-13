@@ -11,6 +11,7 @@ import telran.java57.farmbackend.products.dto.*;
 import telran.java57.farmbackend.products.model.Product;
 import telran.java57.farmbackend.products.model.ProductCategory;
 
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -47,10 +48,13 @@ public class ProductsServiceImpl implements ProductsService {
 
 
     public Iterable<ProductCategoryDto> getProductCategories() {
-        return categoriesRepository.findAll().stream()
-                .map(category ->
-                        new ProductCategoryDto(category.getCategory(), category.getCount()))
-                .toList();
+        ArrayList<ProductCategoryDto> productCategories = new ArrayList<>(
+                categoriesRepository.findAll().stream()
+                        .map(category ->
+                                new ProductCategoryDto(category.getCategory(), category.getCount()))
+                        .toList());
+        productCategories.add(0, new ProductCategoryDto("", (int) productsRepository.count()));
+        return productCategories;
     }
 
     public Iterable<ProductCategoryDto> getEmptyProductCategories() {
