@@ -32,6 +32,11 @@ public class ProductsController {
         return productsService.addProduct(principal.getName(), productDto);
     }
 
+    @PostMapping("test")
+    public void test(Principal principal, @RequestBody String dto) {
+        System.out.println(dto);
+    }
+
     @PutMapping("product")
     public ProductDto updateProduct(Principal principal, @RequestBody ProductDto productDto) {
         return productsService.updateProduct(principal.getName(), productDto);
@@ -42,7 +47,7 @@ public class ProductsController {
         productsService.resetProductsCategories();
     }
 
-    @DeleteMapping("product/{productId}")
+    @PostMapping("productdelete/{productId}")
     public ProductDto deleteProduct(Principal principal, @PathVariable String productId) {
         return productsService.deleteProduct(principal.getName(), productId);
     }
