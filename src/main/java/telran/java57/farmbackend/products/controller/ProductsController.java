@@ -37,7 +37,7 @@ public class ProductsController {
         System.out.println(dto);
     }
 
-    @PutMapping("product")
+    @PostMapping("productput")
     public ProductDto updateProduct(Principal principal, @RequestBody ProductDto productDto) {
         return productsService.updateProduct(principal.getName(), productDto);
     }
