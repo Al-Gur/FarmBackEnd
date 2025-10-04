@@ -17,12 +17,13 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
+    final CorsConfig corsConfig = new CorsConfig();
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.httpBasic(withDefaults());
         httpSecurity.csrf(AbstractHttpConfigurer::disable);
-        httpSecurity.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues());
+        httpSecurity.cors().configurationSource(corsConfig.corsConfigurationSource());
         httpSecurity.authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/user/register").permitAll()
 

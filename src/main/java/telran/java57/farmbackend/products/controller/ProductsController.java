@@ -47,7 +47,7 @@ public class ProductsController {
         productsService.resetProductsCategories();
     }
 
-    @PostMapping("productdelete/{productId}")
+    @DeleteMapping("productdelete/{productId}")
     public ProductDto deleteProduct(Principal principal, @PathVariable String productId) {
         return productsService.deleteProduct(principal.getName(), productId);
     }
