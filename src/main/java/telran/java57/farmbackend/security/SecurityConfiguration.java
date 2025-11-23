@@ -25,7 +25,7 @@ public class SecurityConfiguration {
         httpSecurity.csrf(AbstractHttpConfigurer::disable);
         httpSecurity.cors().configurationSource(corsConfig.corsConfigurationSource());
         httpSecurity.authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/user/register").permitAll()
+                .requestMatchers("user/register").permitAll()
 
                 .requestMatchers("user/showall")
                 .access(new WebExpressionAuthorizationManager("hasRole('ADMINISTRATOR')"))

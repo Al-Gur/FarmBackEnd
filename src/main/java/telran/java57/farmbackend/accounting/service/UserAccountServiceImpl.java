@@ -29,7 +29,11 @@ public class UserAccountServiceImpl implements UserAccountService, CommandLineRu
             throw new UserExistsException();
         }
         String password = passwordEncoder.encode(userRegisterDto.getPassword());
-        UserAccount user = new UserAccount(userRegisterDto.getLogin(), password, userRegisterDto.getFullName());
+        UserAccount user = new UserAccount(userRegisterDto.getLogin(), password, userRegisterDto.getFullName(),
+                userRegisterDto.getEmail(), userRegisterDto.getPhone(), userRegisterDto.getAddress());
+        if (userRegisterDto.isSeller()) {
+            user.addRole("SELLER");
+        }
 //        if (userAccountRepository.count() == 0) {
 //           user.addRole("ADMINISTRATOR");
 //        }
@@ -90,7 +94,8 @@ public class UserAccountServiceImpl implements UserAccountService, CommandLineRu
 //        }
         if (!userAccountRepository.existsById("admin")) {
             String password = passwordEncoder.encode("adm11");
-            UserAccount user = new UserAccount("admin", password, "admin");//TODO
+            UserAccount user = new UserAccount("admin", password, "admin",
+                    "", "", "");//TODO
             user.addRole("ADMINISTRATOR");
             userAccountRepository.save(user);
         }

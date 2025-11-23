@@ -7,4 +7,8 @@ public class UserRegisterDto {
     String login;
     String password;
     String fullName;
+    String email;
+    String phone;
+    String address;
+    boolean seller;
 }

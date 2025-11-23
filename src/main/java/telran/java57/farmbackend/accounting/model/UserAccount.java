@@ -19,6 +19,12 @@ public class UserAccount {
     String password;
     @Setter
     String fullName;
+    @Setter
+    String email;
+    @Setter
+    String phone;
+    @Setter
+    String address;
     Set<String> roles;
     ArrayList<OrderDto> orders;
 
@@ -27,11 +33,14 @@ public class UserAccount {
         roles.add("USER");
     }
 
-    public UserAccount(String login, String password, String fullName) {
+    public UserAccount(String login, String password, String fullName, String email, String phone, String address) {
         this();
         this.login = login;
         this.password = password;
         this.fullName = fullName;
+        this.email = email;
+        this.phone = phone;
+        this.address = address;
     }
 
     public boolean addRole(String role){
